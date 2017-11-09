@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @var \Inchoo\TicketManager\Block\DetailBlock $block
+ */
+?>
+<?php if (count($block->getReplies()) > 0): ?>
+    <h2>Previous Replies</h2>
+    <?php foreach ($block->getReplies() as $reply): ?>
+        <h5>
+            <?= $block->escapeHtml($block->dateTimeFormat($reply->getCreatedAt())) ?>
+            <?php if ($reply->getAdminId() == null): ?>
+                <?= $block->escapeHtml($block->getCustomerName()) ?>:
+            <?php else: ?>
+                <?= $block->escapeHtml($block->getUserName($reply->getAdminId())) ?>:
+            <?php endif; ?>
+        </h5>
+        <p><?= $block->escapeHtml($reply->getMessage()) ?></p>
+        <hr/>
+    <?php endforeach; ?>
+<?php endif; ?>

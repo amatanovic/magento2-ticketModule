@@ -1,0 +1,43 @@
+<?php
+/**
+ * @var \Inchoo\TicketManager\Block\ListBlock $block
+ */
+?>
+<div class="actions-toolbar">
+    <div class="primary">
+        <a href="<?= $block->escapeHtmlAttr($block->getNewUrl()) ?>" class="action save primary"
+           title="<?= $block->escapeHtmlAttr(__('Open new ticket')) ?>">
+            <span><?= $block->escapeHtml(__('Open new ticket')) ?></span>
+        </a>
+    </div>
+</div>
+
+<?php if (count($block->getTickets()) > 0): ?>
+    <div class="table-wrapper orders-history">
+        <table class="table">
+            <thead>
+            <tr>
+                <td>Subject</td>
+                <td>Closed</td>
+                <td>Created at</td>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($block->getTickets() as $ticket): ?>
+                <tr>
+                    <td>
+                        <a href="<?= $block->escapeUrl($block->getDetailUrl($ticket->getid())) ?>"><?= $block->escapeHtml($ticket->getSubject()) ?></a>
+                    </td>
+                    <td>
+                        <input type="checkbox" <?php if ($ticket->getIsClosed()): ?>checked<?php endif; ?> disabled>
+                    </td>
+                    <td><?= $block->escapeHtml($block->dateFormat($ticket->getCreatedAt())) ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+<?php else: ?>
+<div class="message info empty"><span><?= /* @escapeNotVerified */
+        __('You have placed no tickets.') ?></span></div>
+<?php endif; ?>

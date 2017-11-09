@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">tickets_listing.tickets_listing_data_source</item>
+        </item>
+    </argument>
+
+    <settings>
+        <spinner>tickets_listing_columns</spinner>
+        <deps>
+            <dep>tickets_listing.tickets_listing_data_source</dep>
+        </deps>
+    </settings>
+
+    <dataSource name="tickets_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">ticket_id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>Inchoo_TicketManager::tickets</aclResource>
+        <dataProvider class="Inchoo\TicketManager\Ui\Component\TicketsDataProvider" name="tickets_listing_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>ticket_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>false</sticky>
+        </settings>
+
+        <paging name="listing_paging"/>
+
+    </listingToolbar>
+
+    <columns name="tickets_listing_columns">
+        <column name="ticket_id">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+                <sorting>desc</sorting>
+            </settings>
+        </column>
+        <column name="subject">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Subject</label>
+            </settings>
+        </column>
+        <column name="is_closed" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <options class="Inchoo\TicketManager\Model\Ticket\Source\IsOpened"/>
+                <filter>select</filter>
+                <editor>
+                    <editorType>select</editorType>
+                </editor>
+                <dataType>select</dataType>
+                <label translate="true">Status</label>
+            </settings>
+        </column>
+        <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
+            <settings>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">Created</label>
+            </settings>
+        </column>
+        <actionsColumn name="actions" class="Inchoo\TicketManager\Ui\Component\Listing\Column\EditActions">
+            <settings>
+                <indexField>ticket_id</indexField>
+            </settings>
+        </actionsColumn>
+    </columns>
+</listing>

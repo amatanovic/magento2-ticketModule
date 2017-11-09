@@ -1,0 +1,34 @@
+<?php
+
+/**
+ * @var \Inchoo\TicketManager\Block\DetailBlock $block
+ */
+
+if (!$block->getCurrentTicket()->getIsClosed()):
+?>
+<form class="form" action="<?= $block->escapeUrl($block->getReplyPostUrl()) ?>" id="ticket-form" method="post" data-hasrequired="* Required Fields"
+      data-mage-init='{"validation":{}}'>
+    <?= $block->getBlockHtml('formkey') ?>
+    <fieldset class="fieldset">
+        <div class="field name required">
+            <label class="label" for="message"><span>Reply</span></label>
+            <div class="control">
+                <textarea data-validate='{"required":true}' name="reply" id="reply"
+                          title="<?= $block->escapeHtmlAttr(__('Reply')) ?>"
+                          value="" class="input-text" type="text"></textarea>
+            </div>
+        </div>
+    </fieldset>
+    <input type="hidden" name="ticket" value="<?= $block->getCurrentTicket()->getId() ?>">
+    <div class="actions-toolbar">
+        <div class="primary">
+            <button type="submit" title="<?= __('Save') ?>" name="save" class="action submit primary">
+                <span><?= __('Save') ?></span>
+            </button>
+        </div>
+        <div class="secondary">
+            <a href="<?= $block->escapeUrl($block->getCloseUrl()) ?>" title="<?= __('Close Ticket') ?>"><?= __('Close Ticket') ?></a>
+        </div>
+    </div>
+</form>
+<?php endif; ?>
