@@ -41,6 +41,11 @@ class ListBlock extends \Magento\Framework\View\Element\Template
      */
     protected $storeManager;
 
+    /**
+     * @var TicketInterface[]
+     */
+    protected $ticketCollection;
+
 
     /**
      * ListBlock constructor.
@@ -76,22 +81,23 @@ class ListBlock extends \Magento\Framework\View\Element\Template
 
     /**
      * @return TicketInterface[]
-     * @todo do not call select multiple times
      */
     public function getTickets()
     {
-        $this->sortOrderBuilder
-            ->setField('created_at')
-            ->setDescendingDirection();
-        $orderByCreatedAt = $this->sortOrderBuilder->create();
+        if ($this->ticketCollection == null) {
+            $this->sortOrderBuilder
+                ->setField('created_at')
+                ->setDescendingDirection();
+            $orderByCreatedAt = $this->sortOrderBuilder->create();
 
-        $this->searchCriteriaBuilder
-            ->addFilter(TicketInterface::CUSTOMER_ID, $this->customerSession->getCustomerId(), 'eq')
-            ->addFilter(TicketInterface::WEBSITE_ID, $this->storeManager->getStore()->getWebsiteId(), 'eq')
-            ->addSortOrder($orderByCreatedAt);
-        $searchCriteria = $this->searchCriteriaBuilder->create();
-        $result = $this->ticketRepository->getList($searchCriteria)->getItems();
-        return $result;
+            $this->searchCriteriaBuilder
+                ->addFilter(TicketInterface::CUSTOMER_ID, $this->customerSession->getCustomerId(), 'eq')
+                ->addFilter(TicketInterface::WEBSITE_ID, $this->storeManager->getStore()->getWebsiteId(), 'eq')
+                ->addSortOrder($orderByCreatedAt);
+            $searchCriteria = $this->searchCriteriaBuilder->create();
+            $this->ticketCollection = $this->ticketRepository->getList($searchCriteria)->getItems();
+        }
+        return $this->ticketCollection;
     }
 
     /**

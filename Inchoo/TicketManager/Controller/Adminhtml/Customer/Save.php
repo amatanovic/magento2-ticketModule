@@ -58,10 +58,6 @@ class Save extends AbstractAction
     }
 
 
-    /**
-     * @return $this
-     * @todo surround with try catch
-     */
     public function execute()
     {
         /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
