@@ -4,8 +4,12 @@
     <default>
         <ticketManager>
             <email>
-                <send>1</send>
+                <send>0</send>
                 <sender>general</sender>
+                <recipient_email>
+                    <![CDATA[hello@example.com]]>
+                </recipient_email>
+                <email_template>ticketManager_email_email_template</email_template>
             </email>
         </ticketManager>
     </default>

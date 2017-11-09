@@ -13,6 +13,7 @@ use Inchoo\TicketManager\Api\TicketRepositoryInterface;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Data\Form\FormKey\Validator;
+use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -46,6 +47,11 @@ class Submit extends Customer
     protected $storeManager;
 
     /**
+     * @var ManagerInterface
+     */
+    private $eventManager;
+
+    /**
      * @param Context $context
      * @param TicketRepositoryInterface $ticketRepository
      * @param \Magento\Customer\Model\Session $customerSession
@@ -58,7 +64,8 @@ class Submit extends Customer
         Session $customerSession,
         Validator $formKeyValidator,
         \Inchoo\TicketManager\Model\TicketFactory $ticketFactory,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        ManagerInterface $manager
     )
     {
         parent::__construct($context, $customerSession);
@@ -66,6 +73,7 @@ class Submit extends Customer
         $this->formKeyValidator = $formKeyValidator;
         $this->ticketFactory = $ticketFactory;
         $this->storeManager = $storeManager;
+        $this->eventManager = $manager;
     }
 
 
@@ -84,6 +92,10 @@ class Submit extends Customer
             $ticket->setWebsiteId($this->storeManager->getStore()->getWebsiteId());
             try {
                 $this->ticketRepository->save($ticket);
+                $this->eventManager->dispatch(
+                    'ticket_saved',
+                    ['subject' => $inputData->getParam('subject')]
+                );
                 $this->messageManager->addSuccessMessage(__('You created new ticket.'));
             } catch (CouldNotSaveException $exception) {
                 $this->messageManager->addErrorMessage(__('Ticket is not created.'));
