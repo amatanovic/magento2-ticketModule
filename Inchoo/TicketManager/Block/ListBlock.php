@@ -10,26 +10,11 @@ namespace Inchoo\TicketManager\Block;
 
 
 use Inchoo\TicketManager\Api\Data\TicketInterface;
-use Magento\Framework\Api\SearchCriteriaBuilder;
+use Inchoo\TicketManager\Model\ResourceModel\Ticket\Collection;
 use Magento\Store\Model\StoreManagerInterface;
 
 class ListBlock extends \Magento\Framework\View\Element\Template
 {
-
-    /**
-     * @var \Magento\Framework\Api\SearchCriteriaBuilder
-     */
-    protected $searchCriteriaBuilder;
-
-    /**
-     * @var \Inchoo\TicketManager\Api\TicketRepositoryInterface
-     */
-    protected $ticketRepository;
-
-    /**
-     * @var \Magento\Framework\Api\SortOrderBuilder
-     */
-    protected $sortOrderBuilder;
 
     /**
      * @var \Magento\Customer\Model\Session
@@ -42,33 +27,34 @@ class ListBlock extends \Magento\Framework\View\Element\Template
     protected $storeManager;
 
     /**
-     * @var TicketInterface[]
+     * @var Collection
      */
     protected $ticketCollection;
+
+    /**
+     * @var CollectionFactory
+     */
+    protected $ticketCollectionFactory;
 
 
     /**
      * ListBlock constructor.
      * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param \Inchoo\TicketManager\Api\TicketRepositoryInterface $ticketRepository
-     * @param \Magento\Framework\Api\SortOrderBuilder $sortOrderBuilder
+     * @param \Magento\Customer\Model\Session $session
+     * @param StoreManagerInterface $storeManager
+     * @param \Inchoo\TicketManager\Model\ResourceModel\Ticket\CollectionFactory $collectionFactory
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        \Inchoo\TicketManager\Api\TicketRepositoryInterface $ticketRepository,
-        \Magento\Framework\Api\SortOrderBuilder $sortOrderBuilder,
         \Magento\Customer\Model\Session $session,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Inchoo\TicketManager\Model\ResourceModel\Ticket\CollectionFactory $collectionFactory
     )
     {
         parent::__construct($context);
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->ticketRepository = $ticketRepository;
-        $this->sortOrderBuilder = $sortOrderBuilder;
         $this->customerSession = $session;
         $this->storeManager = $storeManager;
+        $this->ticketCollectionFactory = $collectionFactory;
     }
 
     /**
@@ -80,24 +66,11 @@ class ListBlock extends \Magento\Framework\View\Element\Template
     }
 
     /**
-     * @return TicketInterface[]
+     * @return string
      */
-    public function getTickets()
+    public function getPagerHtml()
     {
-        if ($this->ticketCollection == null) {
-            $this->sortOrderBuilder
-                ->setField('created_at')
-                ->setDescendingDirection();
-            $orderByCreatedAt = $this->sortOrderBuilder->create();
-
-            $this->searchCriteriaBuilder
-                ->addFilter(TicketInterface::CUSTOMER_ID, $this->customerSession->getCustomerId(), 'eq')
-                ->addFilter(TicketInterface::WEBSITE_ID, $this->storeManager->getStore()->getWebsiteId(), 'eq')
-                ->addSortOrder($orderByCreatedAt);
-            $searchCriteria = $this->searchCriteriaBuilder->create();
-            $this->ticketCollection = $this->ticketRepository->getList($searchCriteria)->getItems();
-        }
-        return $this->ticketCollection;
+        return $this->getChildHtml('pager');
     }
 
     /**
@@ -115,6 +88,63 @@ class ListBlock extends \Magento\Framework\View\Element\Template
     public function dateFormat($date)
     {
         return $this->formatDate($date, \IntlDateFormatter::MEDIUM);
+    }
+
+    /**
+     * @return $this
+     */
+    protected function _prepareLayout()
+    {
+        parent::_prepareLayout();
+        if ($this->getTickets()) {
+            $pager = $this->getLayout()->createBlock(
+                \Magento\Theme\Block\Html\Pager::class,
+                'tickets.pager'
+            )->setCollection(
+                $this->getTickets()
+            );
+            $this->setChild('pager', $pager);
+            $this->getTickets()->load();
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getTickets()
+    {
+        if ($this->ticketCollection == null) {
+
+            $this->ticketCollection = $this->ticketCollectionFactory->create()
+                ->addFieldToFilter(
+                    TicketInterface::WEBSITE_ID,
+                    ['eq' => $this->storeManager->getStore()->getWebsiteId()]
+                )->addFieldToFilter(
+                    TicketInterface::CUSTOMER_ID,
+                    ['eq' => $this->customerSession->getCustomerId()]
+                )->setOrder(
+                    'created_at',
+                    'desc'
+                );
+
+            /*
+             * Pagination is added so I can't use repository any more
+             *
+              $this->sortOrderBuilder
+                  ->setField('created_at')
+                  ->setDescendingDirection();
+              $orderByCreatedAt = $this->sortOrderBuilder->create();
+
+              $this->searchCriteriaBuilder
+                  ->addFilter(TicketInterface::CUSTOMER_ID, $this->customerSession->getCustomerId(), 'eq')
+                  ->addFilter(TicketInterface::WEBSITE_ID, $this->storeManager->getStore()->getWebsiteId(), 'eq')
+                  ->addSortOrder($orderByCreatedAt);
+              $searchCriteria = $this->searchCriteriaBuilder->create();
+              $this->ticketCollection = $this->ticketRepository->getList($searchCriteria)->getItems();
+            */
+        }
+        return $this->ticketCollection;
     }
 
 }

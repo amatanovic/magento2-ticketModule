@@ -12,7 +12,7 @@
         </div>
     </div>
 
-<?php if (count($block->getTickets()) > 0): ?>
+<?php if ($block->getTickets()->count() > 0): ?>
     <div class="table-wrapper orders-history">
         <table class="table">
             <thead>
@@ -37,6 +37,9 @@
             </tbody>
         </table>
     </div>
+    <?php if ($block->getPagerHtml()): ?>
+        <div class="toolbar bottom"><?= $block->getPagerHtml() ?></div>
+    <?php endif ?>
 <?php else: ?>
     <div class="message info empty">
         <span><?= $block->escapeHtml(__('You have placed no tickets.')) ?></span>
