@@ -39,7 +39,7 @@
         <settings>
             <submitUrl path="tickets/customer/save"/>
         </settings>
-        <dataProvider class="Inchoo\TicketManager\Ui\Component\TicketsDataProvider" name="ticket_form_data_source">
+        <dataProvider class="Inchoo\TicketManager\Ui\Component\TicketDetailDataProvider" name="ticket_form_data_source">
             <settings>
                 <requestFieldName>id</requestFieldName>
                 <primaryFieldName>ticket_id</primaryFieldName>

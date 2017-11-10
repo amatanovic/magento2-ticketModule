@@ -5,7 +5,7 @@
  */
 ?>
 <?php if (count($block->getReplies()) > 0): ?>
-    <h2>Previous Replies</h2>
+    <h2><?= $block->escapeHtml(__('Previous Replies')) ?></h2>
     <?php foreach ($block->getReplies() as $reply): ?>
         <h5>
             <?= $block->escapeHtml($block->dateTimeFormat($reply->getCreatedAt())) ?>

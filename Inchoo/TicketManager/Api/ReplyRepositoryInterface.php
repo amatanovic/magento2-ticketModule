@@ -20,7 +20,7 @@ interface ReplyRepositoryInterface
      * Retrieve reply.
      *
      * @param int $replyId
-     * @return \Inchoo\TicketManager\Api\Data\TicketInterface
+     * @return \Inchoo\TicketManager\Api\Data\ReplyInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getById($replyId);

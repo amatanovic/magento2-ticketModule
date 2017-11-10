@@ -14,7 +14,7 @@ use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 class Reply extends AbstractDb
 {
     /**
-     * Initialize ticket Resource
+     * Initialize Reply Resource
      *
      * @return void
      */

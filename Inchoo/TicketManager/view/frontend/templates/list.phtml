@@ -3,14 +3,14 @@
  * @var \Inchoo\TicketManager\Block\ListBlock $block
  */
 ?>
-<div class="actions-toolbar">
-    <div class="primary">
-        <a href="<?= $block->escapeHtmlAttr($block->getNewUrl()) ?>" class="action save primary"
-           title="<?= $block->escapeHtmlAttr(__('Open new ticket')) ?>">
-            <span><?= $block->escapeHtml(__('Open new ticket')) ?></span>
-        </a>
+    <div class="actions-toolbar">
+        <div class="primary">
+            <a href="<?= $block->escapeHtmlAttr($block->getNewUrl()) ?>" class="action save primary"
+               title="<?= $block->escapeHtmlAttr(__('Open new ticket')) ?>">
+                <span><?= $block->escapeHtml(__('Open new ticket')) ?></span>
+            </a>
+        </div>
     </div>
-</div>
 
 <?php if (count($block->getTickets()) > 0): ?>
     <div class="table-wrapper orders-history">
@@ -38,6 +38,7 @@
         </table>
     </div>
 <?php else: ?>
-<div class="message info empty"><span><?= /* @escapeNotVerified */
-        __('You have placed no tickets.') ?></span></div>
+    <div class="message info empty">
+        <span><?= $block->escapeHtml(__('You have placed no tickets.')) ?></span>
+    </div>
 <?php endif; ?>

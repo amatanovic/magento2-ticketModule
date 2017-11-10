@@ -85,7 +85,7 @@ interface ReplyInterface
 
     /**
      * @param $createdAt
-     * @return TicketInterface
+     * @return ReplyInterface
      */
     public function setCreatedAt($createdAt);
 
@@ -98,7 +98,7 @@ interface ReplyInterface
 
     /**
      * @param $updatedAt
-     * @return TicketInterface
+     * @return ReplyInterface
      */
     public function setUpdatedAt($updatedAt);
 }

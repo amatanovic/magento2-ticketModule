@@ -67,7 +67,7 @@ class ReplyRepository implements ReplyRepositoryInterface
      * Retrieve reply.
      *
      * @param int $replyId
-     * @return \Inchoo\TicketManager\Api\Data\TicketInterface
+     * @return \Inchoo\TicketManager\Api\Data\ReplyInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getById($replyId)
@@ -120,7 +120,7 @@ class ReplyRepository implements ReplyRepositoryInterface
      */
     public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
     {
-        /** @var \Inchoo\TicketManager\Model\ResourceModel\Ticket\Collection $collection */
+        /** @var \Inchoo\TicketManager\Model\ResourceModel\Reply\Collection $collection */
         $collection = $this->replyCollectionFactory->create();
 
         $this->collectionProcessor->process($searchCriteria, $collection);

@@ -1,8 +1,15 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: antun
+ * Date: 11/10/17
+ * Time: 11:41 AM
+ */
 
 namespace Inchoo\TicketManager\Ui\Component;
 
-class TicketsDataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
+
+class TicketDetailDataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
 {
     /**
      * @param $name
@@ -30,7 +37,11 @@ class TicketsDataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
      */
     public function getData()
     {
-        $data = $this->getCollection()->toArray();
+        $dataObject = $this->getCollection()->getFirstItem();
+        $data = [
+            $dataObject->getId() => $dataObject->toArray()
+        ];
+
         return $data;
     }
 }

@@ -61,6 +61,9 @@ class DetailBlock extends \Magento\Framework\View\Element\Template
      */
     protected $userResource;
 
+    /**
+     * @var bool
+     */
     protected $customerTemplate;
 
     /**

@@ -14,7 +14,7 @@ use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 class Collection extends AbstractCollection
 {
     /**
-     * Initialize ticket Collection
+     * Initialize reply Collection
      *
      * @return void
      */
