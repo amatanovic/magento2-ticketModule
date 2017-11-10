@@ -9,3 +9,4 @@ The extension has following features:
 * Admin can see customer tickets from Magento administration and reply to them
 * Tickets are stored per website, per customer. 
 * Tickets can have status: open/closed. New ticket is automatically open. Both administrator or customer can close a ticket.
+* Admin gets email on new ticket (configurable in Magento Administration)
