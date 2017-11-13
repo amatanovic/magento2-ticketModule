@@ -48,15 +48,14 @@ class Detail extends Customer
         $this->resultPageFactory = $resultPageFactory;
         $this->registry = $registry;
         $this->ticketRepository = $ticketRepository;
-        parent::__construct($context, $customerSession);
+        parent::__construct($context, $customerSession, $ticketRepository);
     }
 
 
     public function execute()
     {
-        $ticketId = (int)$this->getRequest()->getParam('id', false);
         try {
-            $ticket = $this->ticketRepository->getById($ticketId);
+            $ticket = $this->loadAndValidateTicket();
             $this->registry->register('current_ticket', $ticket);
             $this->registry->register('customer_template_view', true);
             $resultPage = $this->resultPageFactory->create();
@@ -66,10 +65,7 @@ class Detail extends Customer
             }
             return $resultPage;
         } catch (NoSuchEntityException $entityException) {
-            $this->messageManager->addErrorMessage(__('Requested ticket was not found.'));
-            $resultRedirect = $this->resultRedirectFactory->create();
-            $resultRedirect->setPath('tickets/customer');
-            return $resultRedirect;
+            return $this->redirectWithError();
         }
     }
 }

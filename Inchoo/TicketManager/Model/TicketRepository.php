@@ -137,19 +137,14 @@ class TicketRepository implements TicketRepositoryInterface
     /**
      * Close ticket.
      *
-     * @param int $ticketId
-     * @return \Inchoo\TicketManager\Api\Data\TicketInterface
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @param TicketInterface $ticket
+     * @return bool
+     * @throws CouldNotSaveException
      */
-    public function closeById($ticketId)
+    public function close(TicketInterface $ticket)
     {
-        $ticket = $this->getById($ticketId);
         $ticket->setIsClosed(true);
-        try {
-            $this->ticketResource->save($ticket);
-        } catch (\Exception $exception) {
-            throw new CouldNotSaveException(__($exception->getMessage()));
-        }
-        return $ticket;
+        $this->ticketResource->save($ticket);
+        return true;
     }
 }

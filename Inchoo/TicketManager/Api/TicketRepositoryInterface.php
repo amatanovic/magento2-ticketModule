@@ -11,6 +11,7 @@ namespace Inchoo\TicketManager\Api;
 
 use Inchoo\TicketManager\Api\Data\TicketInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
+use Magento\Framework\Exception\CouldNotSaveException;
 
 interface TicketRepositoryInterface
 {
@@ -51,12 +52,10 @@ interface TicketRepositoryInterface
     public function getList(SearchCriteriaInterface $searchCriteria);
 
     /**
-     * Close ticket.
-     *
-     * @param int $ticketId
-     * @return \Inchoo\TicketManager\Api\Data\TicketInterface
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @param TicketInterface $ticket
+     * @return bool
+     * @throws CouldNotSaveException
      */
-    public function closeById($ticketId);
+    public function close(TicketInterface $ticket);
 
 }

@@ -52,11 +52,14 @@ class Submit extends Customer
     private $eventManager;
 
     /**
+     * Submit constructor.
      * @param Context $context
      * @param TicketRepositoryInterface $ticketRepository
-     * @param \Magento\Customer\Model\Session $customerSession
+     * @param Session $customerSession
      * @param Validator $formKeyValidator
      * @param \Inchoo\TicketManager\Model\TicketFactory $ticketFactory
+     * @param StoreManagerInterface $storeManager
+     * @param ManagerInterface $manager
      */
     public function __construct(
         Context $context,
@@ -68,7 +71,7 @@ class Submit extends Customer
         ManagerInterface $manager
     )
     {
-        parent::__construct($context, $customerSession);
+        parent::__construct($context, $customerSession, $ticketRepository);
         $this->ticketRepository = $ticketRepository;
         $this->formKeyValidator = $formKeyValidator;
         $this->ticketFactory = $ticketFactory;

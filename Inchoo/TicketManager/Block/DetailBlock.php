@@ -175,15 +175,7 @@ class DetailBlock extends \Magento\Framework\View\Element\Template
      */
     public function getReplyPostUrl()
     {
-        return $this->getUrl('tickets/customer/replypost', ['_secure' => true]);
-    }
-
-    /**
-     * @return string
-     */
-    public function getBackUrl()
-    {
-        return $this->getUrl('tickets/customer', ['_secure' => true]);
+        return $this->getUrl('tickets/customer/replypost', ['_secure' => true, 'id' => $this->getCurrentTicket()->getId()]);
     }
 
     /**

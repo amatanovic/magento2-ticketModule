@@ -21,7 +21,6 @@ if (!$block->getCurrentTicket()->getIsClosed()):
             </div>
         </div>
     </fieldset>
-    <input type="hidden" name="ticket" value="<?= $block->getCurrentTicket()->getId() ?>">
     <div class="actions-toolbar">
         <div class="primary">
             <button type="submit" title="<?= __('Save') ?>" name="save" class="action submit primary">

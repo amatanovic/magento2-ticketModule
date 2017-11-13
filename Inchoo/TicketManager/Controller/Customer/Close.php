@@ -10,6 +10,8 @@ namespace Inchoo\TicketManager\Controller\Customer;
 
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 class Close extends Customer
 {
@@ -37,20 +39,24 @@ class Close extends Customer
         Session $customerSession
     )
     {
-        parent::__construct($context, $customerSession);
+        parent::__construct($context, $customerSession, $ticketRepository);
         $this->ticketRepository = $ticketRepository;
     }
 
 
     public function execute()
     {
-        $ticketId = (int)$this->getRequest()->getParam('id', false);
-        $resultRedirect = $this->resultRedirectFactory->create();
         try {
-            $this->ticketRepository->closeById($ticketId);
-            $this->messageManager->addSuccessMessage(__('Ticket is closed.'));
-        } catch (\Exception $entityException) {
-            $this->messageManager->addErrorMessage(__('There was a problem closing this ticket.'));
+            $ticket = $this->loadAndValidateTicket();
+            $resultRedirect = $this->resultRedirectFactory->create();
+            try {
+                $this->ticketRepository->close($ticket);
+                $this->messageManager->addSuccessMessage(__('Ticket is closed.'));
+            } catch (CouldNotSaveException $entityException) {
+                $this->messageManager->addErrorMessage(__('There was a problem closing this ticket.'));
+            }
+        } catch (NoSuchEntityException $exception) {
+            return $this->redirectWithError();
         }
         return $resultRedirect->setPath('*/*/');
     }

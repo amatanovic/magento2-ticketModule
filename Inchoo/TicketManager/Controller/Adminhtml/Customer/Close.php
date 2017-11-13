@@ -44,7 +44,8 @@ class Close extends AbstractAction
         $ticketId = (int)$this->getRequest()->getParam('id', false);
         $resultRedirect = $this->resultRedirectFactory->create();
         try {
-            $this->ticketRepository->closeById($ticketId);
+            $ticket = $this->ticketRepository->getById($ticketId);
+            $this->ticketRepository->close($ticket);
             $this->messageManager->addSuccessMessage(__('Ticket is closed.'));
 
         } catch (\Exception $entityException) {

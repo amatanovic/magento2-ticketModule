@@ -28,10 +28,11 @@ class NewAction extends Customer
     public function __construct(
         Context $context,
         Session $customerSession,
-        PageFactory $resultPageFactory
+        PageFactory $resultPageFactory,
+        \Inchoo\TicketManager\Api\TicketRepositoryInterface $ticketRepository
     )
     {
-        parent::__construct($context, $customerSession);
+        parent::__construct($context, $customerSession, $ticketRepository);
         $this->resultPageFactory = $resultPageFactory;
     }
 
